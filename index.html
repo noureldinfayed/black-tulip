@@ -6,7 +6,7 @@
   <title>Black Tulip | بلاك توليب</title>
   <meta name="description" content="بلاك توليب في الإسكندرية — للهدايا وتنظيم الحفلات وأعياد الميلاد وتنسيق الورود بلمسة فاخرة." />
   <meta name="theme-color" content="#120d0e" />
-  <link rel="icon" type="image/png" href="/public/images/logo.png">
+  <link rel="icon" type="image/png" href="public/images/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;700;800&family=Cormorant+Garamond:wght@500;600;700&family=Marhey:wght@400;500;700&display=swap" rel="stylesheet">
@@ -569,6 +569,13 @@
 
     .gallery-slide.active{opacity:1}
 
+    .gallery-slide:empty{
+      background:
+        radial-gradient(circle at 30% 40%, rgba(214,171,116,.18), transparent 44%),
+        radial-gradient(circle at 75% 65%, rgba(186,106,114,.12), transparent 38%),
+        linear-gradient(135deg, #1e1416 0%, #2a1c1d 100%);
+    }
+
     .gallery-slide img{
       width:100%;
       height:100%;
@@ -654,8 +661,7 @@
       content:"";
       position:absolute;
       inset:0;
-      background:url('https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
-      opacity:.08;
+      background:radial-gradient(circle at 50% 50%, rgba(214,171,116,.06), transparent 60%);
       pointer-events:none;
     }
 
@@ -1061,7 +1067,7 @@
 
   <header class="topbar" id="topbar">
     <a href="#home" class="brand-mini" aria-label="Black Tulip Home">
-      <img src="/public/images/logo.png" alt="Black Tulip Logo">
+      <img src="public/images/logo.png" alt="Black Tulip Logo">
       <div class="brand-mini-text">
         <span class="latin" dir="ltr">BLACK TULIP</span>
         <small>بلاك توليب</small>
@@ -1081,7 +1087,7 @@
   <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
     <button class="mobile-close" id="mobileClose" type="button" aria-label="Close menu">×</button>
     <div class="mobile-brand" dir="ltr">
-      <img src="/public/images/logo.png" alt="Black Tulip Logo" style="height:56px;width:56px;object-fit:contain;display:block;margin:0 auto 8px;">
+      <img src="public/images/logo.png" alt="Black Tulip Logo" style="height:56px;width:56px;object-fit:contain;display:block;margin:0 auto 8px;">
       BLACK TULIP<small>بلاك توليب</small>
     </div>
     <a href="#services">الخدمات</a>
@@ -1093,11 +1099,7 @@
 
   <main>
     <section class="hero" id="home">
-      <div class="hero-media" aria-hidden="true">
-        <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1526397751294-331021109fbd?auto=format&fit=crop&w=1800&q=80');"></div>
-        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1464349153735-7db50ed83c84?auto=format&fit=crop&w=1800&q=80');"></div>
-        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1800&q=80');"></div>
-      </div>
+      <div class="hero-media" aria-hidden="true"></div>
 
       <div class="hero-glow hero-glow-1" aria-hidden="true"></div>
       <div class="hero-glow hero-glow-2" aria-hidden="true"></div>
@@ -1163,16 +1165,12 @@
       <div class="gallery-frame reveal" id="galleryFrame">
         <div class="gallery-media">
           <figure class="gallery-slide active" data-title="بوكيهات بتوقيع أنيق" data-copy="تصاميم وردية متوازنة في اللون والحجم والملمس لتناسب الهدية الراقية والمشهد الذي يستحق أن يبقى.">
-            <img src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=1600&q=80" alt="تنسيق ورد فاخر من Black Tulip">
           </figure>
           <figure class="gallery-slide" data-title="حفلات ميلاد تخطف الكاميرا" data-copy="من زاوية الدخول حتى الطاولة والصورة الأولى، كل تفصيلة محسوبة لتصنع حضورًا بصريًا قويًا ومرتبًا.">
-            <img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=1600&q=80" alt="تنسيق حفلة أنيق">
           </figure>
           <figure class="gallery-slide" data-title="مشاهد زفاف ناعمة وفاخرة" data-copy="طبقات ورد، إضاءة ناعمة، وتنسيق مدروس يعطي المناسبة طابعًا رومانسيًا راقيًا دون مبالغة.">
-            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1600&q=80" alt="تنسيق زفاف وورود">
           </figure>
           <figure class="gallery-slide" data-title="هدايا تليق باللحظة" data-copy="الفكرة، الترتيب، التغليف والتسليم — كل شيء يخرج بإحساس Premium يليق بالمناسبة والشخص المستلم.">
-            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1600&q=80" alt="هدايا وتنسيق ورد">
           </figure>
         </div>
 
@@ -1266,7 +1264,7 @@
     <div class="footer-inner">
       <div>
         <div class="footer-brand" dir="ltr">
-          <img src="/public/images/logo.png" alt="Black Tulip Logo">
+          <img src="public/images/logo.png" alt="Black Tulip Logo">
           BLACK TULIP
         </div>
         <p>بلاك توليب — للهدايا وتنظيم الحفلات وأعياد الميلاد وتنسيق الورود في الإسكندرية بلمسة أنيقة ومخصصة لكل مناسبة.</p>
