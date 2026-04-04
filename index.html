@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Black Tulip | بلاك توليب</title>
+  <meta name="description" content="بلاك توليب في الإسكندرية — للهدايا وتنظيم الحفلات وأعياد الميلاد وتنسيق الورود بلمسة فاخرة." />
+  <meta name="theme-color" content="#120d0e" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;700;800&family=Cormorant+Garamond:wght@500;600;700&family=Marhey:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#120d0e;
+      --bg-soft:#1c1415;
+      --ink:#fff7ef;
+      --muted:#dac8ba;
+      --gold:#d6ab74;
+      --gold-soft:#f2dec1;
+      --rose:#ba6a72;
+      --cream:#f8f0e7;
+      --cream-soft:#efe3d6;
+      --ink-dark:#1f1716;
+      --ink-dark-soft:#5f5047;
+      --line:rgba(255,255,255,.11);
+      --line-dark:rgba(31,23,22,.12);
+      --shadow:0 30px 80px rgba(0,0,0,.22);
+      --radius:28px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:"Alexandria",sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+      overflow-x:hidden;
+      text-align:right;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(214,171,116,.08), transparent 24%),
+        radial-gradient(circle at 85% 10%, rgba(186,106,114,.07), transparent 22%),
+        linear-gradient(180deg, rgba(255,255,255,.015), rgba(255,255,255,0));
+      pointer-events:none;
+      z-index:0;
+    }
+
+    body.is-locked{overflow:hidden}
+
+    ::selection{
+      background:rgba(214,171,116,.28);
+      color:var(--ink);
+    }
+
+    a{text-decoration:none;color:inherit}
+    button,input,textarea,select{font:inherit}
+    img{display:block;max-width:100%}
+    button{cursor:pointer;border:0;background:none;color:inherit}
+    section[id]{scroll-margin-top:96px}
+
+    :focus-visible{
+      outline:2px solid var(--gold);
+      outline-offset:4px;
+    }
+
+    #petalsCanvas{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      pointer-events:none;
+      z-index:1;
+      opacity:.22;
+    }
+
+    .topbar{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      z-index:50;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:24px;
+      padding:20px 5vw;
+      transition:all .35s ease;
+    }
+
+    .topbar.scrolled{
+      padding:14px 5vw;
+      background:rgba(11,8,9,.56);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .brand-mini{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      line-height:1;
+      position:relative;
+      z-index:2;
+    }
+
+    .brand-mini .latin{
+      font-family:"Cormorant Garamond",serif;
+      font-size:1.45rem;
+      font-weight:700;
+      letter-spacing:.16em;
+      white-space:nowrap;
+    }
+
+    .brand-mini small{
+      font-family:"Marhey",cursive;
+      font-size:.9rem;
+      color:var(--gold-soft);
+    }
+
+    .nav-links{
+      display:flex;
+      align-items:center;
+      gap:32px;
+      font-size:.96rem;
+      color:rgba(255,247,239,.86);
+    }
+
+    .nav-links a{
+      position:relative;
+      padding-bottom:5px;
+    }
+
+    .nav-links a::after{
+      content:"";
+      position:absolute;
+      right:0;
+      bottom:0;
+      width:100%;
+      height:1px;
+      background:var(--gold);
+      transform:scaleX(0);
+      transform-origin:right;
+      transition:transform .35s ease;
+    }
+
+    .nav-links a:hover::after{transform:scaleX(1)}
+
+    .menu-toggle{
+      display:none;
+      padding:11px 16px;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      backdrop-filter:blur(10px);
+    }
+
+    .mobile-menu{
+      position:fixed;
+      inset:0;
+      z-index:60;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(214,171,116,.1), transparent 24%),
+        linear-gradient(180deg, rgba(11,8,9,.98), rgba(22,14,15,.98));
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      gap:22px;
+      opacity:0;
+      pointer-events:none;
+      transition:.3s ease;
+    }
+
+    .mobile-menu.active{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .mobile-close{
+      position:absolute;
+      top:20px;
+      left:5vw;
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.04);
+    }
+
+    .mobile-menu .mobile-brand{
+      font-family:"Cormorant Garamond",serif;
+      font-size:2rem;
+      letter-spacing:.18em;
+    }
+
+    .mobile-menu .mobile-brand small{
+      display:block;
+      font-family:"Marhey",cursive;
+      letter-spacing:0;
+      font-size:1rem;
+      margin-top:8px;
+      text-align:center;
+      color:var(--gold-soft);
+    }
+
+    .mobile-menu a{
+      font-family:"Marhey",cursive;
+      font-size:1.65rem;
+    }
+
+    .hero{
+      position:relative;
+      min-height:100svh;
+      display:flex;
+      align-items:center;
+      overflow:hidden;
+      isolation:isolate;
+      padding:0 5vw;
+      background:#0c0809;
+      --mx:72%;
+      --my:38%;
+      z-index:2;
+    }
+
+    .hero-media,
+    .hero-slide{
+      position:absolute;
+      inset:0;
+    }
+
+    .hero-slide{
+      opacity:0;
+      background-size:cover;
+      background-position:center;
+      transform:scale(1.08);
+      transition:opacity 1.2s ease, transform 7s ease;
+      filter:saturate(1.03) contrast(1.03);
+    }
+
+    .hero-slide.active{
+      opacity:1;
+      transform:scale(1);
+    }
+
+    .hero-slide:nth-child(1){background-position:center 35%}
+    .hero-slide:nth-child(2){background-position:center 50%}
+    .hero-slide:nth-child(3){background-position:center 30%}
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:1;
+      background:
+        linear-gradient(90deg, rgba(8,6,6,.92) 4%, rgba(8,6,6,.38) 46%, rgba(8,6,6,.82) 100%),
+        radial-gradient(circle at var(--mx) var(--my), rgba(214,171,116,.22), transparent 18%),
+        linear-gradient(180deg, rgba(15,10,11,.18), rgba(15,10,11,.68));
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:auto 0 0;
+      height:24vh;
+      background:linear-gradient(180deg, rgba(18,13,14,0), var(--bg));
+      z-index:1;
+    }
+
+    .hero-glow{
+      position:absolute;
+      border-radius:50%;
+      filter:blur(68px);
+      pointer-events:none;
+      mix-blend-mode:screen;
+      z-index:1;
+    }
+
+    .hero-glow-1{
+      width:32vw;
+      height:32vw;
+      top:8%;
+      left:-6%;
+      background:rgba(214,171,116,.16);
+    }
+
+    .hero-glow-2{
+      width:22vw;
+      height:22vw;
+      bottom:8%;
+      right:6%;
+      background:rgba(186,106,114,.12);
+    }
+
+    .hero-inner{
+      position:relative;
+      z-index:2;
+      width:min(860px,100%);
+      padding:14vh 0 11vh;
+    }
+
+    .kicker{
+      margin:0 0 14px;
+      font-size:.84rem;
+      letter-spacing:.34em;
+      text-transform:uppercase;
+      color:var(--gold-soft);
+      opacity:.92;
+    }
+
+    .brand-title{
+      margin:0;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:8px;
+      line-height:.9;
+    }
+
+    .brand-title .latin{
+      font-family:"Cormorant Garamond",serif;
+      font-size:clamp(3.2rem,11vw,8.2rem);
+      font-weight:700;
+      line-height:.85;
+      letter-spacing:.1em;
+      white-space:nowrap;
+      background:linear-gradient(180deg, #f9ecd5 0%, #d6ab74 46%, #fff4e4 100%);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      text-shadow:0 12px 40px rgba(0,0,0,.18);
+    }
+
+    .brand-title em{
+      font-family:"Marhey",cursive;
+      font-style:normal;
+      font-size:clamp(1.9rem,5.8vw,3.9rem);
+      color:var(--ink);
+    }
+
+    .hero-title{
+      margin:18px 0 0;
+      font-family:"Marhey",cursive;
+      font-size:clamp(1.85rem,4.2vw,3.6rem);
+      line-height:1.1;
+      max-width:13ch;
+    }
+
+    .hero-copy{
+      margin:18px 0 30px;
+      max-width:57ch;
+      color:var(--muted);
+      font-size:clamp(1rem,1.15vw,1.16rem);
+      line-height:1.9;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      min-height:54px;
+      padding:14px 24px;
+      border-radius:999px;
+      transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease, background .3s ease;
+      font-weight:700;
+      white-space:nowrap;
+    }
+
+    .btn:hover{
+      transform:translateY(-2px);
+    }
+
+    .btn-primary{
+      color:#1a120c;
+      background:linear-gradient(135deg, var(--gold), var(--gold-soft));
+      box-shadow:0 18px 44px rgba(214,171,116,.25);
+    }
+
+    .btn-secondary{
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.06);
+      backdrop-filter:blur(12px);
+    }
+
+    .btn-dark{
+      color:#fff;
+      background:#1f1716;
+      border:1px solid #1f1716;
+      box-shadow:0 16px 38px rgba(31,23,22,.18);
+    }
+
+    .btn-ghost-dark{
+      color:#1f1716;
+      border:1px solid rgba(31,23,22,.16);
+      background:rgba(255,255,255,.55);
+    }
+
+    .section{
+      position:relative;
+      z-index:2;
+      padding:110px 5vw;
+    }
+
+    .section-head{
+      max-width:820px;
+      margin:0 auto 58px;
+      text-align:center;
+    }
+
+    .section-kicker{
+      margin:0 0 12px;
+      font-size:.82rem;
+      letter-spacing:.32em;
+      text-transform:uppercase;
+      color:var(--gold);
+    }
+
+    .section-head h2{
+      margin:0 0 16px;
+      font-family:"Marhey",cursive;
+      font-size:clamp(2rem,4vw,3.5rem);
+      line-height:1.15;
+    }
+
+    .section-head p{
+      margin:0 auto;
+      max-width:62ch;
+      line-height:1.9;
+      color:var(--muted);
+    }
+
+    .services{
+      background:
+        radial-gradient(circle at 15% 10%, rgba(214,171,116,.08), transparent 26%),
+        linear-gradient(180deg, rgba(26,18,19,.92), rgba(17,12,13,1));
+    }
+
+    .service-list{
+      max-width:1120px;
+      margin:0 auto;
+    }
+
+    .service-row{
+      position:relative;
+      display:grid;
+      grid-template-columns:76px 1.05fr 1.45fr;
+      align-items:center;
+      gap:26px;
+      padding:28px 0;
+      border-top:1px solid var(--line);
+      overflow:hidden;
+      transition:transform .3s ease, border-color .3s ease;
+    }
+
+    .service-row:last-child{
+      border-bottom:1px solid var(--line);
+    }
+
+    .service-row::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(90deg, rgba(214,171,116,.09), transparent 68%);
+      opacity:0;
+      transition:opacity .3s ease;
+      pointer-events:none;
+    }
+
+    .service-row:hover{
+      transform:translateX(-2px);
+      border-color:rgba(214,171,116,.22);
+    }
+
+    .service-row:hover::before{opacity:1}
+
+    .service-index{
+      font-family:"Cormorant Garamond",serif;
+      font-size:2rem;
+      color:rgba(255,255,255,.42);
+    }
+
+    .service-row h3{
+      margin:0;
+      font-family:"Marhey",cursive;
+      font-size:1.75rem;
+      line-height:1.25;
+    }
+
+    .service-row p{
+      margin:0;
+      line-height:1.85;
+      color:var(--muted);
+    }
+
+    .service-meta{
+      margin:26px auto 0;
+      max-width:1120px;
+      text-align:center;
+      color:var(--gold-soft);
+      line-height:1.9;
+      font-size:.95rem;
+    }
+
+    .light{
+      color:var(--ink-dark);
+    }
+
+    .light .section-kicker{
+      color:#9f6d48;
+    }
+
+    .light .section-head p{
+      color:var(--ink-dark-soft);
+    }
+
+    .showcase{
+      background:
+        radial-gradient(circle at 82% 12%, rgba(214,171,116,.12), transparent 26%),
+        linear-gradient(180deg, #fbf6ef 0%, var(--cream-soft) 100%);
+    }
+
+    .gallery-frame{
+      max-width:1220px;
+      margin:0 auto;
+    }
+
+    .gallery-media{
+      position:relative;
+      height:min(72vh,760px);
+      overflow:hidden;
+      border-radius:32px;
+      box-shadow:var(--shadow);
+      background:#e8ddd0;
+    }
+
+    .gallery-slide{
+      position:absolute;
+      inset:0;
+      margin:0;
+      opacity:0;
+      transition:opacity .9s ease;
+    }
+
+    .gallery-slide.active{opacity:1}
+
+    .gallery-slide img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transform:scale(1.06);
+      transition:transform 6s ease;
+    }
+
+    .gallery-slide.active img{transform:scale(1)}
+
+    .gallery-caption{
+      display:grid;
+      grid-template-columns:1.2fr auto;
+      align-items:end;
+      gap:16px 28px;
+      padding-top:22px;
+    }
+
+    .gallery-caption h3{
+      margin:0 0 10px;
+      font-family:"Marhey",cursive;
+      font-size:1.9rem;
+      line-height:1.2;
+    }
+
+    .gallery-caption p{
+      margin:0;
+      color:var(--ink-dark-soft);
+      line-height:1.9;
+      max-width:60ch;
+    }
+
+    .gallery-controls{
+      display:flex;
+      gap:10px;
+    }
+
+    .control{
+      width:54px;
+      height:54px;
+      border-radius:50%;
+      border:1px solid rgba(31,23,22,.14);
+      color:var(--ink-dark);
+      background:rgba(255,255,255,.55);
+      transition:.3s ease;
+      font-size:1.2rem;
+    }
+
+    .control:hover{
+      background:var(--ink-dark);
+      color:#fff;
+    }
+
+    .gallery-dots{
+      display:flex;
+      gap:10px;
+      margin-top:18px;
+      justify-content:flex-start;
+    }
+
+    .dot{
+      width:11px;
+      height:11px;
+      border-radius:50%;
+      border:0;
+      background:rgba(31,23,22,.22);
+      transition:.3s ease;
+      padding:0;
+    }
+
+    .dot.active{
+      background:var(--ink-dark);
+      transform:scale(1.12);
+    }
+
+    .reviews{
+      background:
+        linear-gradient(135deg, rgba(17,11,12,.94), rgba(32,18,19,.96));
+      overflow:hidden;
+    }
+
+    .reviews::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:url('https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+      opacity:.08;
+      pointer-events:none;
+    }
+
+    .reviews > *{position:relative;z-index:1}
+
+    .review-rotator{
+      max-width:980px;
+      margin:0 auto;
+      text-align:center;
+      position:relative;
+      padding:8px 0 0;
+    }
+
+    .review-rotator::before{
+      content:"“";
+      position:absolute;
+      top:-24px;
+      right:50%;
+      transform:translateX(50%);
+      font-family:"Cormorant Garamond",serif;
+      font-size:9rem;
+      line-height:1;
+      color:rgba(214,171,116,.12);
+      pointer-events:none;
+    }
+
+    .review-stars{
+      margin-bottom:18px;
+      color:var(--gold);
+      font-size:1.1rem;
+      letter-spacing:.38em;
+    }
+
+    #reviewText{
+      margin:0 auto 20px;
+      max-width:17ch;
+      font-family:"Marhey",cursive;
+      font-size:clamp(1.8rem,4vw,3.15rem);
+      line-height:1.35;
+    }
+
+    .review-author{
+      font-size:1rem;
+      color:var(--muted);
+    }
+
+    .review-score{
+      margin-top:14px;
+      color:var(--gold-soft);
+      font-size:.96rem;
+    }
+
+    .contact{
+      background:
+        radial-gradient(circle at 15% 10%, rgba(186,106,114,.08), transparent 24%),
+        linear-gradient(180deg, #fdf8f2 0%, #f3e8dc 100%);
+    }
+
+    .contact-grid{
+      max-width:1220px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:.95fr 1.2fr;
+      gap:38px;
+      align-items:stretch;
+    }
+
+    .contact-details{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:22px;
+    }
+
+    .detail{
+      padding-bottom:16px;
+      border-bottom:1px solid var(--line-dark);
+    }
+
+    .detail span{
+      display:block;
+      margin-bottom:8px;
+      color:#8b7568;
+      font-size:.82rem;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+
+    .detail p,
+    .detail a{
+      margin:0;
+      color:var(--ink-dark);
+      line-height:1.85;
+      font-size:1.08rem;
+    }
+
+    .detail a:hover{color:#8d5b38}
+
+    .contact-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      padding-top:4px;
+    }
+
+    .map-wrap{
+      min-height:480px;
+      overflow:hidden;
+      border-radius:32px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(31,23,22,.08);
+      background:#e7dacd;
+    }
+
+    .map-wrap iframe{
+      width:100%;
+      height:100%;
+      border:0;
+      filter:grayscale(.18) saturate(.94);
+    }
+
+    .footer{
+      position:relative;
+      z-index:2;
+      padding:28px 5vw 34px;
+      background:#100c0d;
+      border-top:1px solid rgba(255,255,255,.06);
+    }
+
+    .footer-inner{
+      max-width:1220px;
+      margin:0 auto;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:20px;
+      color:rgba(255,247,239,.8);
+    }
+
+    .footer-brand{
+      font-family:"Cormorant Garamond",serif;
+      font-size:1.35rem;
+      letter-spacing:.16em;
+      margin-bottom:8px;
+    }
+
+    .footer p{
+      margin:0;
+      color:rgba(255,247,239,.62);
+      line-height:1.8;
+      font-size:.92rem;
+      max-width:58ch;
+    }
+
+    .footer-links{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+      font-size:.95rem;
+    }
+
+    .footer-links a{
+      color:var(--gold-soft);
+    }
+
+    .modal{
+      position:fixed;
+      inset:0;
+      z-index:100;
+      display:grid;
+      place-items:center;
+      padding:20px;
+      background:rgba(9,6,7,.68);
+      backdrop-filter:blur(14px);
+      opacity:0;
+      pointer-events:none;
+      transition:.3s ease;
+    }
+
+    .modal.active{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .modal-panel{
+      width:min(700px,100%);
+      max-height:min(88vh,860px);
+      overflow:auto;
+      border-radius:30px;
+      padding:28px;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(214,171,116,.1), transparent 24%),
+        linear-gradient(180deg, #1a1213 0%, #0f0a0b 100%);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 36px 90px rgba(0,0,0,.34);
+    }
+
+    .modal-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:18px;
+    }
+
+    .modal-top h3{
+      margin:0 0 8px;
+      font-family:"Marhey",cursive;
+      font-size:2rem;
+      line-height:1.2;
+    }
+
+    .modal-top p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.8;
+      font-size:.96rem;
+    }
+
+    .modal-close{
+      width:46px;
+      height:46px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      flex:0 0 auto;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .field.full{grid-column:1/-1}
+
+    .field label{
+      font-size:.92rem;
+      color:var(--gold-soft);
+    }
+
+    .field input,
+    .field select,
+    .field textarea{
+      width:100%;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.05);
+      color:var(--ink);
+      padding:14px 16px;
+      resize:vertical;
+      min-height:54px;
+    }
+
+    .field textarea{min-height:132px}
+
+    .form-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .note{
+      margin-top:14px;
+      color:var(--gold-soft);
+      font-size:.92rem;
+      line-height:1.8;
+    }
+
+    [data-animate]{opacity:1;transform:none}
+
+    @media (max-width: 980px){
+      .nav-links{display:none}
+      .menu-toggle{display:inline-flex}
+      .hero{padding-top:72px}
+      .service-row{
+        grid-template-columns:64px 1fr;
+      }
+      .service-row p{
+        grid-column:2;
+      }
+      .contact-grid{
+        grid-template-columns:1fr;
+      }
+      .map-wrap{
+        min-height:400px;
+      }
+    }
+
+    @media (max-width: 720px){
+      .hero{
+        text-align:center;
+      }
+      .hero::before{
+        background:
+          linear-gradient(180deg, rgba(8,6,6,.72), rgba(8,6,6,.72)),
+          radial-gradient(circle at var(--mx) var(--my), rgba(214,171,116,.16), transparent 18%);
+      }
+      .hero-inner{
+        margin:0 auto;
+        padding:17vh 0 10vh;
+      }
+      .brand-title{
+        align-items:center;
+      }
+      .hero-title{
+        max-width:none;
+      }
+      .hero-copy{
+        margin-inline:auto;
+      }
+      .hero-actions{
+        justify-content:center;
+      }
+      .section{
+        padding:88px 5vw;
+      }
+      .gallery-media{
+        height:56vh;
+        border-radius:24px;
+      }
+      .gallery-caption{
+        grid-template-columns:1fr;
+        align-items:start;
+      }
+      .gallery-controls{
+        justify-content:flex-start;
+      }
+      .review-rotator::before{
+        font-size:6rem;
+        top:-8px;
+      }
+      .footer-inner{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .form-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width: 520px){
+      .topbar{padding:16px 5vw}
+      .brand-mini .latin{font-size:1.2rem}
+      .btn{width:100%}
+      .hero-actions{width:100%}
+      .service-row{
+        grid-template-columns:1fr;
+        gap:10px;
+      }
+      .service-row p{grid-column:auto}
+      .service-index{font-size:1.5rem}
+      .service-row h3{font-size:1.45rem}
+      .map-wrap{min-height:340px}
+      .modal-panel{padding:22px}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      html{scroll-behavior:auto}
+      *,
+      *::before,
+      *::after{
+        animation:none !important;
+        transition:none !important;
+      }
+      #petalsCanvas{display:none}
+    }
+  </style>
+</head>
+<body>
+  <canvas id="petalsCanvas" aria-hidden="true"></canvas>
+
+  <header class="topbar" id="topbar">
+    <a href="#home" class="brand-mini" aria-label="Black Tulip Home">
+      <span class="latin" dir="ltr">BLACK TULIP</span>
+      <small>بلاك توليب</small>
+    </a>
+
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#services">الخدمات</a>
+      <a href="#gallery">الأعمال</a>
+      <a href="#reviews">الآراء</a>
+      <a href="#contact">التواصل</a>
+    </nav>
+
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu">القائمة</button>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <button class="mobile-close" id="mobileClose" type="button" aria-label="Close menu">×</button>
+    <div class="mobile-brand" dir="ltr">BLACK TULIP<small>بلاك توليب</small></div>
+    <a href="#services">الخدمات</a>
+    <a href="#gallery">الأعمال</a>
+    <a href="#reviews">الآراء</a>
+    <a href="#contact">التواصل</a>
+    <a href="https://wa.me/201286987566" target="_blank" rel="noopener">واتساب</a>
+  </div>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-media" aria-hidden="true">
+        <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1526397751294-331021109fbd?auto=format&fit=crop&w=1800&q=80');"></div>
+        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1464349153735-7db50ed83c84?auto=format&fit=crop&w=1800&q=80');"></div>
+        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1800&q=80');"></div>
+      </div>
+
+      <div class="hero-glow hero-glow-1" aria-hidden="true"></div>
+      <div class="hero-glow hero-glow-2" aria-hidden="true"></div>
+
+      <div class="hero-inner">
+        <p class="kicker">ALEXANDRIA · FLOWERS · EVENTS</p>
+        <h1 class="brand-title">
+          <span class="latin" dir="ltr">BLACK TULIP</span>
+          <em>بلاك توليب</em>
+        </h1>
+        <h2 class="hero-title">نحوّل الهدية والحفلة إلى مشهد لا يُنسى</h2>
+        <p class="hero-copy">تنسيق ورود فاخر، هدايا، حفلات وأعياد ميلاد بتفاصيل مصممة لتخطف العين من أول ثانية وتبقى في الذاكرة بعد آخر صورة.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary js-open-booking" type="button">احجز مناسبتك</button>
+          <a class="btn btn-secondary" href="https://wa.me/201286987566" target="_blank" rel="noopener">واتساب مباشر</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section services" id="services">
+      <div class="section-head reveal">
+        <p class="section-kicker">SIGNATURE SERVICES</p>
+        <h2>كل مناسبة تخرج من هنا بهوية بصرية خاصة</h2>
+        <p>من البوكيهات الراقية إلى حفلات الميلاد والمفاجآت المنزلية وتنسيق الحفلات والزفاف — بلاك توليب يصمم المشهد كاملًا، لا مجرد تفاصيل منفصلة.</p>
+      </div>
+
+      <div class="service-list">
+        <div class="service-row reveal">
+          <div class="service-index">01</div>
+          <h3>تنسيق ورود فاخر</h3>
+          <p>بوكيهات، صناديق ورد، وتغليف هدايا بتوازن أنيق بين الذوق الحديث واللمسة الرومانسية.</p>
+        </div>
+
+        <div class="service-row reveal">
+          <div class="service-index">02</div>
+          <h3>حفلات أعياد ميلاد ومفاجآت</h3>
+          <p>ديكور، بالونات، طاولات تصوير، ألوان متناسقة وتجهيز كامل يصنع دخولًا قويًا وصورًا مميزة.</p>
+        </div>
+
+        <div class="service-row reveal">
+          <div class="service-index">03</div>
+          <h3>هدايا مرتبة بعناية</h3>
+          <p>تنسيق صناديق وهدايا خاصة حسب الطلب مع لمسات شخصية تجعل الهدية تبدو أغلى من قيمتها.</p>
+        </div>
+
+        <div class="service-row reveal">
+          <div class="service-index">04</div>
+          <h3>تنسيق حفلات وزفاف</h3>
+          <p>Floral styling ومشهد بصري متكامل للحفلات الصغيرة والمناسبات الكبيرة بلمسة راقية وناعمة.</p>
+        </div>
+      </div>
+
+      <div class="service-meta reveal">حجز أونلاين · توصيل داخل الإسكندرية · استلام من المحل · استلام سريع · تجهيز حسب الطلب</div>
+    </section>
+
+    <section class="section showcase light" id="gallery">
+      <div class="section-head reveal">
+        <p class="section-kicker">SELECTED WORK</p>
+        <h2>أعمال مصممة لتبدأ بالإبهار قبل أن تُنشر في الصورة</h2>
+        <p>لقطات مختارة من عالم Black Tulip — حيث الورد، الإضاءة، والأجواء يعملون معًا كقصة واحدة.</p>
+      </div>
+
+      <div class="gallery-frame reveal" id="galleryFrame">
+        <div class="gallery-media">
+          <figure class="gallery-slide active" data-title="بوكيهات بتوقيع أنيق" data-copy="تصاميم وردية متوازنة في اللون والحجم والملمس لتناسب الهدية الراقية والمشهد الذي يستحق أن يبقى.">
+            <img src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=1600&q=80" alt="تنسيق ورد فاخر من Black Tulip">
+          </figure>
+          <figure class="gallery-slide" data-title="حفلات ميلاد تخطف الكاميرا" data-copy="من زاوية الدخول حتى الطاولة والصورة الأولى، كل تفصيلة محسوبة لتصنع حضورًا بصريًا قويًا ومرتبًا.">
+            <img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=1600&q=80" alt="تنسيق حفلة أنيق">
+          </figure>
+          <figure class="gallery-slide" data-title="مشاهد زفاف ناعمة وفاخرة" data-copy="طبقات ورد، إضاءة ناعمة، وتنسيق مدروس يعطي المناسبة طابعًا رومانسيًا راقيًا دون مبالغة.">
+            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1600&q=80" alt="تنسيق زفاف وورود">
+          </figure>
+          <figure class="gallery-slide" data-title="هدايا تليق باللحظة" data-copy="الفكرة، الترتيب، التغليف والتسليم — كل شيء يخرج بإحساس Premium يليق بالمناسبة والشخص المستلم.">
+            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1600&q=80" alt="هدايا وتنسيق ورد">
+          </figure>
+        </div>
+
+        <div class="gallery-caption">
+          <div>
+            <h3 id="galleryTitle">بوكيهات بتوقيع أنيق</h3>
+            <p id="galleryCopy">تصاميم وردية متوازنة في اللون والحجم والملمس لتناسب الهدية الراقية والمشهد الذي يستحق أن يبقى.</p>
+          </div>
+          <div class="gallery-controls">
+            <button class="control" id="nextSlide" type="button" aria-label="Next slide">→</button>
+            <button class="control" id="prevSlide" type="button" aria-label="Previous slide">←</button>
+          </div>
+        </div>
+
+        <div class="gallery-dots" aria-label="Gallery pagination">
+          <button class="dot active" type="button" aria-label="Slide 1"></button>
+          <button class="dot" type="button" aria-label="Slide 2"></button>
+          <button class="dot" type="button" aria-label="Slide 3"></button>
+          <button class="dot" type="button" aria-label="Slide 4"></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reviews" id="reviews">
+      <div class="section-head reveal">
+        <p class="section-kicker">GOOGLE REVIEWS</p>
+        <h2>الانطباع الذي يتركه العمل الحقيقي</h2>
+        <p>آراء حقيقية من عملاء Black Tulip — عن الذوق، التنفيذ، والاحترام في التفاصيل.</p>
+      </div>
+
+      <div class="review-rotator reveal">
+        <div class="review-stars">★★★★★</div>
+        <blockquote id="reviewText">المكان ممتاز جدًا والخدمة راقية، وينفذون تمامًا ما تختاره.</blockquote>
+        <div class="review-author" id="reviewAuthor">Bosy Ahmed</div>
+        <div class="review-score">4.7 من 5 على Google</div>
+      </div>
+    </section>
+
+    <section class="section contact light" id="contact">
+      <div class="section-head reveal">
+        <p class="section-kicker">BOOKING & CONTACT</p>
+        <h2>جاهزون للحجز والتوصيل في الإسكندرية</h2>
+        <p>للطلبات السريعة، الحجز المسبق، أو تنسيق مناسبة كاملة — تواصل معنا مباشرة وسيتم تجهيز الطلب بأعلى عناية.</p>
+      </div>
+
+      <div class="contact-grid reveal">
+        <div class="contact-details">
+          <div class="detail">
+            <span>Phone / WhatsApp</span>
+            <p><a href="tel:+201286987566" dir="ltr">+20 12 86987566</a></p>
+          </div>
+
+          <div class="detail">
+            <span>Email</span>
+            <p><a href="mailto:ahmedebrahem216@gmail.com" dir="ltr">ahmedebrahem216@gmail.com</a></p>
+          </div>
+
+          <div class="detail">
+            <span>Address</span>
+            <p>
+              <a href="https://www.google.com/maps/search/?api=1&query=72%20El%20Qasem%2C%20Fleming%2C%20Alexandria%2C%20Egypt" target="_blank" rel="noopener">
+                72 ش مصطفى كامل، فلمنج، بجوار مجوهرات ديامنت، بعد فتح الله ماركت، الإسكندرية.
+              </a>
+            </p>
+          </div>
+
+          <div class="detail">
+            <span>Service Options</span>
+            <p>حجز أونلاين · توصيل · استلام من المحل · استلام سريع</p>
+          </div>
+
+          <div class="contact-actions">
+            <button class="btn btn-dark js-open-booking" type="button">ابدأ الحجز</button>
+            <a class="btn btn-ghost-dark" href="tel:+201286987566" dir="ltr">اتصال مباشر</a>
+          </div>
+        </div>
+
+        <div class="map-wrap">
+          <iframe
+            title="Black Tulip Alexandria Map"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=72%20El%20Qasem%2C%20Fleming%2C%20Alexandria%2C%20Egypt&output=embed">
+          </iframe>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand" dir="ltr">BLACK TULIP</div>
+        <p>بلاك توليب — للهدايا وتنظيم الحفلات وأعياد الميلاد وتنسيق الورود في الإسكندرية بلمسة أنيقة ومخصصة لكل مناسبة.</p>
+      </div>
+      <div class="footer-links">
+        <a href="tel:+201286987566" dir="ltr">+20 12 86987566</a>
+        <a href="mailto:ahmedebrahem216@gmail.com" dir="ltr">Email</a>
+        <a href="https://wa.me/201286987566" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="modal" id="bookingModal" aria-hidden="true">
+    <div class="modal-panel">
+      <div class="modal-top">
+        <div>
+          <h3>احجز طلبك مع Black Tulip</h3>
+          <p>املأ التفاصيل السريعة وسيتم فتح رسالة جاهزة على واتساب لإرسال الحجز مباشرة.</p>
+        </div>
+        <button class="modal-close" type="button" data-close-modal aria-label="Close booking form">×</button>
+      </div>
+
+      <form id="bookingForm">
+        <div class="form-grid">
+          <div class="field">
+            <label for="name">الاسم</label>
+            <input id="name" name="name" type="text" placeholder="اسمك" required>
+          </div>
+
+          <div class="field">
+            <label for="phone">رقم الهاتف</label>
+            <input id="phone" name="phone" type="tel" placeholder="+20..." required>
+          </div>
+
+          <div class="field">
+            <label for="service">نوع الطلب</label>
+            <select id="service" name="service" required>
+              <option value="بوكيه ورد">بوكيه ورد</option>
+              <option value="هدية مخصصة">هدية مخصصة</option>
+              <option value="حفلة عيد ميلاد">حفلة عيد ميلاد</option>
+              <option value="تنسيق حفل / زفاف">تنسيق حفل / زفاف</option>
+              <option value="طلب خاص">طلب خاص</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="date">التاريخ</label>
+            <input id="date" name="date" type="date">
+          </div>
+
+          <div class="field full">
+            <label for="details">تفاصيل الطلب</label>
+            <textarea id="details" name="details" placeholder="اكتب الألوان، الميزانية التقريبية، المكان، أو أي تفاصيل مهمة..."></textarea>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">إرسال على واتساب</button>
+          <button class="btn btn-secondary" type="button" data-close-modal>إغلاق</button>
+        </div>
+
+        <div class="note" id="bookingNote">سيتم فتح واتساب برسالة جاهزة لتأكيد الحجز مباشرة.</div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const topbar = document.getElementById('topbar');
+    const hero = document.querySelector('.hero');
+    const heroSlides = [...document.querySelectorAll('.hero-slide')];
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileClose = document.getElementById('mobileClose');
+    const bookingModal = document.getElementById('bookingModal');
+    const bookingForm = document.getElementById('bookingForm');
+
+    function syncLock() {
+      document.body.classList.toggle('is-locked', mobileMenu.classList.contains('active') || bookingModal.classList.contains('active'));
+    }
+
+    function openMenu() {
+      mobileMenu.classList.add('active');
+      mobileMenu.setAttribute('aria-hidden', 'false');
+      syncLock();
+    }
+
+    function closeMenu() {
+      mobileMenu.classList.remove('active');
+      mobileMenu.setAttribute('aria-hidden', 'true');
+      syncLock();
+    }
+
+    function openModal() {
+      bookingModal.classList.add('active');
+      bookingModal.setAttribute('aria-hidden', 'false');
+      syncLock();
+    }
+
+    function closeModal() {
+      bookingModal.classList.remove('active');
+      bookingModal.setAttribute('aria-hidden', 'true');
+      syncLock();
+    }
+
+    menuToggle.addEventListener('click', openMenu);
+    mobileClose.addEventListener('click', closeMenu);
+
+    [...mobileMenu.querySelectorAll('a')].forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+
+    [...document.querySelectorAll('.js-open-booking')].forEach(btn => {
+      btn.addEventListener('click', openModal);
+    });
+
+    [...document.querySelectorAll('[data-close-modal]')].forEach(btn => {
+      btn.addEventListener('click', closeModal);
+    });
+
+    bookingModal.addEventListener('click', (e) => {
+      if (e.target === bookingModal) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeMenu();
+        closeModal();
+      }
+    });
+
+    function onScroll() {
+      topbar.classList.toggle('scrolled', window.scrollY > 24);
+    }
+
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    if (window.matchMedia('(pointer:fine)').matches) {
+      hero.addEventListener('pointermove', (e) => {
+        const rect = hero.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        hero.style.setProperty('--mx', x + '%');
+        hero.style.setProperty('--my', y + '%');
+      });
+    }
+
+    let heroIndex = 0;
+    if (!reduceMotion && heroSlides.length > 1) {
+      setInterval(() => {
+        heroSlides[heroIndex].classList.remove('active');
+        heroIndex = (heroIndex + 1) % heroSlides.length;
+        heroSlides[heroIndex].classList.add('active');
+      }, 4200);
+    }
+
+    const gallerySlides = [...document.querySelectorAll('.gallery-slide')];
+    const dots = [...document.querySelectorAll('.dot')];
+    const galleryTitle = document.getElementById('galleryTitle');
+    const galleryCopy = document.getElementById('galleryCopy');
+    const galleryFrame = document.getElementById('galleryFrame');
+    const nextSlide = document.getElementById('nextSlide');
+    const prevSlide = document.getElementById('prevSlide');
+    let galleryIndex = 0;
+    let galleryTimer;
+
+    function setGallery(index) {
+      galleryIndex = (index + gallerySlides.length) % gallerySlides.length;
+      gallerySlides.forEach((slide, i) => slide.classList.toggle('active', i === galleryIndex));
+      dots.forEach((dot, i) => dot.classList.toggle('active', i === galleryIndex));
+      galleryTitle.textContent = gallerySlides[galleryIndex].dataset.title;
+      galleryCopy.textContent = gallerySlides[galleryIndex].dataset.copy;
+    }
+
+    function startGallery() {
+      if (reduceMotion) return;
+      clearInterval(galleryTimer);
+      galleryTimer = setInterval(() => setGallery(galleryIndex + 1), 5200);
+    }
+
+    setGallery(0);
+    startGallery();
+
+    nextSlide.addEventListener('click', () => {
+      setGallery(galleryIndex + 1);
+      startGallery();
+    });
+
+    prevSlide.addEventListener('click', () => {
+      setGallery(galleryIndex - 1);
+      startGallery();
+    });
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        setGallery(i);
+        startGallery();
+      });
+    });
+
+    if (window.matchMedia('(pointer:fine)').matches) {
+      galleryFrame.addEventListener('mouseenter', () => clearInterval(galleryTimer));
+      galleryFrame.addEventListener('mouseleave', startGallery);
+    }
+
+    const reviews = [
+      {
+        text: 'المكان ممتاز جدًا والخدمة راقية، وينفذون تمامًا ما تختاره.',
+        author: 'Bosy Ahmed'
+      },
+      {
+        text: 'مكان محترم جدًا، شغل ممتاز وخدمة فوق الممتاز.',
+        author: 'Wael Bake'
+      },
+      {
+        text: 'بوكيهات جميلة جدًا وأحدث التصاميم التي رأيتها.',
+        author: 'Ayman Kamel'
+      }
+    ];
+
+    const reviewText = document.getElementById('reviewText');
+    const reviewAuthor = document.getElementById('reviewAuthor');
+    let reviewIndex = 0;
+
+    function setReview(index) {
+      reviewIndex = (index + reviews.length) % reviews.length;
+      const update = () => {
+        reviewText.textContent = reviews[reviewIndex].text;
+        reviewAuthor.textContent = reviews[reviewIndex].author;
+      };
+
+      if (window.gsap && !reduceMotion) {
+        gsap.to([reviewText, reviewAuthor], {
+          autoAlpha: 0,
+          y: 10,
+          duration: .22,
+          onComplete: () => {
+            update();
+            gsap.to([reviewText, reviewAuthor], {
+              autoAlpha: 1,
+              y: 0,
+              duration: .45,
+              stagger: .04,
+              ease: 'power2.out'
+            });
+          }
+        });
+      } else {
+        update();
+      }
+    }
+
+    if (!reduceMotion) {
+      setInterval(() => setReview(reviewIndex + 1), 4600);
+    }
+
+    bookingForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = new FormData(bookingForm);
+      const name = data.get('name') || '';
+      const phone = data.get('phone') || '';
+      const service = data.get('service') || '';
+      const date = data.get('date') || 'غير محدد';
+      const details = data.get('details') || 'لا توجد تفاصيل إضافية';
+
+      const message =
+`مرحبًا بلاك توليب 🌷
+أرغب في حجز: ${service}
+الاسم: ${name}
+الهاتف: ${phone}
+التاريخ: ${date}
+التفاصيل: ${details}`;
+
+      window.open('https://wa.me/201286987566?text=' + encodeURIComponent(message), '_blank');
+      closeModal();
+    });
+
+    if (window.gsap && !reduceMotion) {
+      gsap.registerPlugin(ScrollTrigger);
+
+      const intro = gsap.timeline({ defaults: { ease: 'power4.out' } });
+      intro
+        .from('.topbar', { y: -24, autoAlpha: 0, duration: .8 })
+        .from('.kicker', { y: 24, autoAlpha: 0, duration: .6 }, '-=.3')
+        .from('.brand-title .latin', { y: 38, autoAlpha: 0, duration: 1 }, '-=.15')
+        .from('.brand-title em', { y: 28, autoAlpha: 0, duration: .8 }, '-=.62')
+        .from('.hero-title', { y: 28, autoAlpha: 0, duration: .75 }, '-=.52')
+        .from('.hero-copy', { y: 20, autoAlpha: 0, duration: .7 }, '-=.4')
+        .from('.hero-actions > *', { y: 16, autoAlpha: 0, duration: .6, stagger: .08 }, '-=.35');
+
+      gsap.utils.toArray('.reveal').forEach((el) => {
+        gsap.from(el, {
+          y: 54,
+          autoAlpha: 0,
+          duration: .95,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 82%'
+          }
+        });
+      });
+
+      gsap.utils.toArray('.service-row').forEach((row) => {
+        gsap.from(row, {
+          y: 30,
+          autoAlpha: 0,
+          duration: .85,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: row,
+            start: 'top 88%'
+          }
+        });
+      });
+
+      gsap.to('.hero-glow-1', {
+        x: 36,
+        y: -28,
+        duration: 8,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut'
+      });
+
+      gsap.to('.hero-glow-2', {
+        x: -28,
+        y: 34,
+        duration: 10,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut'
+      });
+    }
+
+    if (!reduceMotion) {
+      const canvas = document.getElementById('petalsCanvas');
+      const ctx = canvas.getContext('2d');
+      let petals = [];
+
+      function resizeCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const count = window.innerWidth < 768 ? 14 : 24;
+        petals = Array.from({ length: count }, () => ({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          size: 5 + Math.random() * 8,
+          speed: .25 + Math.random() * .45,
+          drift: .1 + Math.random() * .6,
+          rotation: Math.random() * Math.PI,
+          spin: (Math.random() - .5) * .018,
+          phase: Math.random() * Math.PI * 2,
+          opacity: .08 + Math.random() * .24,
+          color: Math.random() > .5 ? 'rgba(214,171,116,1)' : 'rgba(186,106,114,1)'
+        }));
+      }
+
+      function drawPetal(p) {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.scale(1, 1.22);
+        ctx.globalAlpha = p.opacity;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.moveTo(0, -p.size);
+        ctx.bezierCurveTo(p.size * .9, -p.size * .9, p.size * .92, p.size * .88, 0, p.size * 1.18);
+        ctx.bezierCurveTo(-p.size * .92, p.size * .88, -p.size * .9, -p.size * .9, 0, -p.size);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function animatePetals(time) {
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        petals.forEach((p) => {
+          p.y += p.speed;
+          p.x += Math.sin(time * .0006 + p.phase) * p.drift;
+          p.rotation += p.spin;
+
+          if (p.y > window.innerHeight + 30) {
+            p.y = -30;
+            p.x = Math.random() * window.innerWidth;
+          }
+          if (p.x < -30) p.x = window.innerWidth + 30;
+          if (p.x > window.innerWidth + 30) p.x = -30;
+
+          drawPetal(p);
+        });
+
+        requestAnimationFrame(animatePetals);
+      }
+
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+      requestAnimationFrame(animatePetals);
+    }
+  </script>
+</body>
+</html>
