@@ -92,11 +92,13 @@
       gap:24px;
       padding:20px 5vw;
       transition:all .35s ease;
+      background:linear-gradient(180deg, rgba(8,5,6,.72) 0%, rgba(8,5,6,.0) 100%);
+      color:var(--ink);
     }
 
     .topbar.scrolled{
       padding:14px 5vw;
-      background:rgba(11,8,9,.56);
+      background:rgba(11,8,9,.82);
       backdrop-filter:blur(18px);
       border-bottom:1px solid rgba(255,255,255,.08);
     }
@@ -458,7 +460,8 @@
     .services{
       background:
         radial-gradient(circle at 15% 10%, rgba(214,171,116,.08), transparent 26%),
-        linear-gradient(180deg, rgba(26,18,19,.92), rgba(17,12,13,1));
+        linear-gradient(180deg, rgba(26,18,19,.93), rgba(17,12,13,.97)),
+        url('public/images/random.jpg') center/cover no-repeat;
     }
 
     .service-list{
@@ -653,7 +656,8 @@
 
     .reviews{
       background:
-        linear-gradient(135deg, rgba(17,11,12,.94), rgba(32,18,19,.96));
+        linear-gradient(135deg, rgba(17,11,12,.88), rgba(32,18,19,.92)),
+        url('public/images/random.jpeg') center/cover no-repeat;
       overflow:hidden;
     }
 
@@ -787,7 +791,9 @@
       position:relative;
       z-index:2;
       padding:28px 5vw 34px;
-      background:#100c0d;
+      background:
+        linear-gradient(180deg, rgba(16,12,13,.95), rgba(10,8,9,.98)),
+        url('public/images/random4.jpg') center/cover no-repeat;
       border-top:1px solid rgba(255,255,255,.06);
     }
 
@@ -1099,7 +1105,11 @@
 
   <main>
     <section class="hero" id="home">
-      <div class="hero-media" aria-hidden="true"></div>
+      <div class="hero-media" aria-hidden="true">
+        <div class="hero-slide active" style="background-image:url('public/images/hero.jpg')"></div>
+        <div class="hero-slide" style="background-image:url('public/images/hero1.jpg')"></div>
+        <div class="hero-slide" style="background-image:url('public/images/hero2.jpg')"></div>
+      </div>
 
       <div class="hero-glow hero-glow-1" aria-hidden="true"></div>
       <div class="hero-glow hero-glow-2" aria-hidden="true"></div>
@@ -1164,20 +1174,24 @@
 
       <div class="gallery-frame reveal" id="galleryFrame">
         <div class="gallery-media">
-          <figure class="gallery-slide active" data-title="بوكيهات بتوقيع أنيق" data-copy="تصاميم وردية متوازنة في اللون والحجم والملمس لتناسب الهدية الراقية والمشهد الذي يستحق أن يبقى.">
+          <figure class="gallery-slide active" data-title="بوكيهات بتوقيع أنيق" data-copy="توليب أبيض بلمسة اللؤلؤ والكريستال — تصميم راقٍ يجعل الهدية تبدو أغلى من قيمتها وتبقى في الذاكرة طويلًا.">
+            <img src="public/images/random5.jpg" alt="بوكيه توليب أبيض بلمسة لؤلؤ وكريستال">
           </figure>
-          <figure class="gallery-slide" data-title="حفلات ميلاد تخطف الكاميرا" data-copy="من زاوية الدخول حتى الطاولة والصورة الأولى، كل تفصيلة محسوبة لتصنع حضورًا بصريًا قويًا ومرتبًا.">
+          <figure class="gallery-slide" data-title="تجهيزات خطوبة وحفلات داخلية" data-copy="إضاءة شاندليه، قوس الورد الأبيض، وتفاصيل متناسقة تصنع مشهدًا رومانسيًا يليق بأجمل اللحظات.">
+            <img src="public/images/random1.jpg" alt="تجهيزات حفل خطوبة داخلي بورد أبيض">
           </figure>
-          <figure class="gallery-slide" data-title="مشاهد زفاف ناعمة وفاخرة" data-copy="طبقات ورد، إضاءة ناعمة، وتنسيق مدروس يعطي المناسبة طابعًا رومانسيًا راقيًا دون مبالغة.">
+          <figure class="gallery-slide" data-title="حفلات على كورنيش الإسكندرية" data-copy="أجواء ليلية ساحرة على البحر — تنسيق ورود وإضاءة وديكور يحوّل الأمسية إلى تجربة بصرية لا تُنسى.">
+            <img src="public/images/randomm.jpg" alt="حفل زفاف ليلي على كورنيش الإسكندرية">
           </figure>
-          <figure class="gallery-slide" data-title="هدايا تليق باللحظة" data-copy="الفكرة، الترتيب، التغليف والتسليم — كل شيء يخرج بإحساس Premium يليق بالمناسبة والشخص المستلم.">
+          <figure class="gallery-slide" data-title="قوس الورد — لحظة لا تُنسى" data-copy="بين البحر والورد، كل تفصيلة محسوبة — تصميم مفتوح في الهواء الطلق يجمع الرومانسية والإسكندرية في مشهد واحد.">
+            <img src="public/images/random3.jpg" alt="قوس ورد بجانب البحر مع نقش Love You Forever">
           </figure>
         </div>
 
         <div class="gallery-caption">
           <div>
             <h3 id="galleryTitle">بوكيهات بتوقيع أنيق</h3>
-            <p id="galleryCopy">تصاميم وردية متوازنة في اللون والحجم والملمس لتناسب الهدية الراقية والمشهد الذي يستحق أن يبقى.</p>
+            <p id="galleryCopy">توليب أبيض بلمسة اللؤلؤ والكريستال — تصميم راقٍ يجعل الهدية تبدو أغلى من قيمتها وتبقى في الذاكرة طويلًا.</p>
           </div>
           <div class="gallery-controls">
             <button class="control" id="nextSlide" type="button" aria-label="Next slide">→</button>
@@ -1553,8 +1567,7 @@
 
       const intro = gsap.timeline({ defaults: { ease: 'power4.out' } });
       intro
-        .from('.topbar', { y: -24, autoAlpha: 0, duration: .8 })
-        .from('.kicker', { y: 24, autoAlpha: 0, duration: .6 }, '-=.3')
+        .from('.kicker', { y: 24, autoAlpha: 0, duration: .6 })
         .from('.brand-title .latin', { y: 38, autoAlpha: 0, duration: 1 }, '-=.15')
         .from('.brand-title em', { y: 28, autoAlpha: 0, duration: .8 }, '-=.62')
         .from('.hero-title', { y: 28, autoAlpha: 0, duration: .75 }, '-=.52')
